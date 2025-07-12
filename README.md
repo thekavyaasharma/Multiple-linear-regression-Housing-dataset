@@ -1,47 +1,93 @@
 # Multiple Linear Regression Model: Predicting House Prices 
 
-Welcome to this project! Here, we dive into the world of real estate data to understand what truly drives house prices in the Delhi region. Our goal is to build a smart model that helps a real estate company price properties effectively.
+This project focuses on predicting housing prices in the Delhi region using multiple linear regression models. The goal is to identify key factors influencing house prices and to build an accurate predictive model.
 
-## What's Inside?
+## Problem Statement
 
-This Jupyter notebook `mutiple_LinRegModel.ipynb` focuses on building a **Multiple Linear Regression Model**. It's a journey to uncover the hidden relationships between house prices and key factors like area, number of bedrooms, and parking availability.
+A real estate company in the Delhi region aims to optimize property sale prices by understanding the important factors that affect them. This involves:
+* Identifying variables that significantly influence house prices (e.g., area, number of rooms, bathrooms, etc.).
+* Developing a linear model to quantitatively relate house prices with these identified variables.
+* Assessing the accuracy of the model in predicting house prices.
 
-## Multiple Linear Regression: A Simple Explanation 📈
+## Dataset
 
-Imagine you want to predict a house's price. You know that things like its size (area), the number of bedrooms, and whether it has parking all play a role. Multiple Linear Regression is a statistical tool that helps us quantify these relationships.
+The dataset used is `Housing.csv`, containing various attributes of properties in the Delhi region. It includes both numerical and categorical features.
 
-Think of it like this:
-`House Price = (Factor A * Area) + (Factor B * Bedrooms) + (Factor C * Parking) + ... + Some Base Price`
+### Key Features:
+The dataset includes features such as:
+* `price`: The target variable, representing the sale price of the property.
+* `area`: Size of the property.
+* `bedrooms`: Number of bedrooms.
+* `bathrooms`: Number of bathrooms.
+* `stories`: Number of stories.
+* `mainroad`: Proximity to a main road (Yes/No).
+* `guestroom`: Presence of a guestroom (Yes/No).
+* `basement`: Presence of a basement (Yes/No).
+* `hotwaterheating`: Hot water heating availability (Yes/No).
+* `airconditioning`: Air conditioning availability (Yes/No).
+* `parking`: Number of parking spaces.
+* `prefarea`: Whether it's a preferred area (Yes/No).
+* `furnishingstatus`: Furnishing status (furnished, semi-furnished, unfurnished).
 
-Our model finds the best "factors" (coefficients) for each variable to predict the house price accurately. It's a straightforward yet powerful way to see how different features contribute to the final price.
+The dataset consists of 545 entries and 13 columns.
 
-## Our Approach: Smart Feature Selection
+## Methodology
 
-Building a good model isn't just about throwing all data in; it's about picking the right ingredients. In this project, we used two key techniques for feature selection to make our model robust and easy to understand:
+The project employs **Multiple Linear Regression** to model the relationship between house prices and various independent variables. Two primary approaches for feature selection have been explored: Manual Feature Elimination and Recursive Feature Elimination (RFE).
 
-### 1. Feature Elimination based on P-values (Significance)
+### What is Linear Regression?
 
-This technique is like carefully selecting the most impactful features for our model based on their statistical significance. We start with a set of potential factors (like area, bedrooms, bathrooms, stories, main road access, guest room, basement, hot water heating, air conditioning, parking, preferred area, and furnishing status). We then evaluate the p-value for each feature, which tells us how likely it is that the observed relationship happened by chance. Features with high p-values (indicating low significance) are systematically removed. This ensures our model is lean, accurate, and focuses on what truly matters, keeping only the variables that have a strong, statistically significant relationship with house prices.
+Linear Regression is a statistical method used to model the relationship between a dependent variable (the one you want to predict) and one or more independent variables (the factors affecting the prediction). For simple linear regression (one independent variable), the relationship is represented as a straight line. For multiple linear regression, it models the relationship using a linear equation that combines multiple independent variables.
 
-### 2. Variance Inflation Factor (VIF)
+The general equation for a multiple linear regression model is:
 
-Sometimes, independent variables in our model can be related to each other. This is called multicollinearity, and it can make our model less reliable and harder to interpret. The Variance Inflation Factor (VIF) helps us detect this. A high VIF for a variable indicates it's highly correlated with one or more other independent variables in the model. By checking VIF, we can identify and address these issues, making sure our model's predictions are stable and trustworthy. If two variables tell us similar things, VIF helps us decide which one to keep or if we need to adjust our approach. We iteratively remove variables with high VIF values to reduce redundancy and improve the model's reliability.
+$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_n X_n + \epsilon$
 
-## Steps Followed in This Model 🛠️
+Where:
+* $Y$: The dependent variable (e.g., house price).
+* $\beta_0$: The Y-intercept (the value of Y when all X are 0).
+* $\beta_1, \beta_2, ..., \beta_n$: The coefficients for each independent variable, representing the change in Y for a one-unit change in the respective X, holding other variables constant.
+* $X_1, X_2, ..., X_n$: The independent variables (e.g., area, bedrooms, bathrooms).
+* $\epsilon$: The error term, representing the unobserved factors affecting Y.
 
-Here's a clear outline of how we built and refined our Multiple Linear Regression model:
+### Steps Involved:
 
-1.  **Read and Understand the Data:** We started by loading the `Housing.csv` dataset. This dataset is crucial as it contains the property prices and various features for houses in the Delhi region, which we use to **train and test our model**. We also got a good grasp of its structure, checked for any missing values, and understood the data types.
-2.  **Visualizing the Data:** We used visualizations to explore relationships between variables and identify initial patterns.
-3.  **Data Preparation:** This involved preparing the categorical variables for modeling.
-4.  **Splitting Data for Training and Testing:** We divided our dataset into training and testing sets to evaluate how well our model performs on new, unseen data.
-5.  **Feature Scaling:** Numerical features were scaled to ensure that no single feature dominates the model due to its larger values.
-6.  **Building the Model:** We built the initial linear regression model using selected features.
-7.  **Feature Selection (P-values and VIF):** We iteratively refined the model by:
-    * Evaluating the statistical significance of each variable using **p-values**.
-    * Checking the **Variance Inflation Factor (VIF)** for multicollinearity among the independent variables.
-    * Removing variables that were not statistically significant (high p-value) or had high VIF values, leading to a simpler and more robust model.
-8.  **Residual Analysis:** We analyzed the differences between our model's predictions and the actual house prices to ensure the model's assumptions hold true and to identify any patterns in the errors.
-9.  **Making Predictions and Evaluation:** Finally, we used our refined model to predict house prices on the test set and evaluated its accuracy and performance using relevant metrics.
+1.  **Data Loading and Understanding**: Initial loading and exploration of the `Housing.csv` dataset, checking for null values and data types.
+2.  **Exploratory Data Analysis (EDA)**: Visualizing numerical variables using scatter plots and pair plots, and categorical variables using box plots, to understand their distribution and relationship with the price.
+3.  **Data Preprocessing**:
+    * Converting categorical variables (e.g., `mainroad`, `furnishingstatus`) into numerical representations using mapping and creating dummy variables.
+    * Splitting the data into training and testing sets (70% training, 30% testing).
+    * Scaling numerical features using `MinMaxScaler` to bring them to a comparable scale.
+4.  **Feature Selection**:
+    * **Recursive Feature Elimination (RFE)**: Used to select the top 'n' features that are most relevant to predicting house prices.
+    * **Manual Feature Elimination**: Involves iteratively building OLS models and eliminating features based on high p-values and VIF (Variance Inflation Factor) to ensure statistical significance and absence of multicollinearity.
+5.  **Model Building**: Constructing the linear regression model using the selected features.
+6.  **Model Evaluation**:
+    * Calculating the R-squared value to assess how well the model explains the variance in house prices.
+    * Visualizing the residuals (the difference between actual and predicted prices) to check for linearity and homoscedasticity.
 
----
+## Results
+
+Both approaches resulted in robust linear regression models capable of predicting housing prices. The evaluation metrics primarily focused on R-squared, indicating the proportion of variance in the dependent variable that can be predicted from the independent variables.
+
+* The model developed using **Recursive Feature Elimination (RFE)** achieved an R-squared score of **0.655** on the test set. This means approximately 65.5% of the variance in housing prices can be explained by the selected features.
+* The model built using **Manual Feature Elimination** also demonstrated strong performance, with the final R-squared values indicating a good fit to the data.
+
+The residual analysis confirmed that the errors are normally distributed and randomly scattered, suggesting that the linear regression assumptions are met.
+
+## Files in this Repository
+
+* `Housing.csv`: The dataset containing housing price information.
+* `housing-price-prediction-RFE.ipynb`: Jupyter Notebook detailing the housing price prediction using Linear Regression with Recursive Feature Elimination.
+* `mutiple_LinRegModel.ipynb`: Jupyter Notebook detailing the multiple linear regression model with manual feature elimination.
+
+## Technologies Used
+
+* Python
+* Jupyter Notebook
+* Pandas (for data manipulation)
+* Numpy (for numerical operations)
+* Scikit-learn (for machine learning models and preprocessing)
+* Statsmodels (for OLS regression and statistical tests)
+* Matplotlib (for data visualization)
+* Seaborn (for enhanced data visualization)
